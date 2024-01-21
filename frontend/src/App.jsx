@@ -1,9 +1,42 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Layout } from "./components";
-import { Error } from "./pages";
+import {
+  Authors,
+  AuthorsPost,
+  CategoryPosts,
+  CreatePost,
+  DashBoard,
+  EditPost,
+  ErrorPage,
+  Home,
+  Login,
+  Logout,
+  PostDetail,
+  Profile,
+  Signup,
+} from "./pages";
+import "./index.css";
 
 const router = createBrowserRouter([
-  { path: "/", element: <Layout />, errorElement: <Error /> },
+  {
+    path: "/",
+    element: <Layout />,
+    errorElement: <ErrorPage />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: "register", element: <Signup /> },
+      { path: "login", element: <Login /> },
+      { path: "authors", element: <Authors /> },
+      { path: "create", element: <CreatePost /> },
+      { path: "profile/:id", element: <Profile /> },
+      { path: "posts/:id", element: <PostDetail /> },
+      { path: "posts/categories/:category", element: <CategoryPosts /> },
+      { path: "posts/users/:id", element: <AuthorsPost /> },
+      { path: "myposts/:id", element: <DashBoard /> },
+      { path: "posts/:id/edit", element: <EditPost /> },
+      { path: "logout", element: <Logout /> },
+    ],
+  },
 ]);
 
 const App = () => {

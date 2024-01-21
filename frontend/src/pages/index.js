@@ -5,7 +5,7 @@ export { default as CreatePost } from "./CreatePost";
 export { default as DashBoard } from "./DashBoard";
 export { default as DeletePost } from "./DeletePost";
 export { default as EditPost } from "./EditPost";
-export { default as Error } from "./Error";
+export { default as ErrorPage } from "./ErrorPage";
 export { default as Home } from "./Home";
 export { default as Login } from "./Login";
 export { default as Logout } from "./Logout";
