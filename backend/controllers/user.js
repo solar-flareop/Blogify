@@ -5,7 +5,6 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
-import { log } from "console";
 const __dirname = path.resolve();
 
 export const registerController = async (req, res, next) => {

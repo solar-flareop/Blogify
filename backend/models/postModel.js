@@ -1,30 +1,40 @@
-import mongoose from "mongoose";
+import { Schema, model } from "mongoose";
 
-const schema = new mongoose.Schema(
+const schema = new Schema(
   {
-    name: {
+    title: {
       type: String,
       required: true,
     },
-    email: {
+    category: {
+      type: String,
+      enum: [
+        "Agriculture",
+        "Business",
+        "Education",
+        "Entertainment",
+        "Art",
+        "Investment",
+        "Uncategorized",
+        "Weather",
+      ],
+      message: "VALUE is not supported",
+    },
+    description: {
       type: String,
       required: true,
-      unique: true,
     },
-    password: {
+    creator: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    thumbnail: {
       type: String,
       required: true,
-    },
-    avatar: {
-      type: String,
-    },
-    posts: {
-      type: Number,
-      default: 0,
     },
   },
   { timestamps: true }
 );
 
-const postSchema = mongoose.model("post", schema);
+const postSchema = model("post", schema);
 export default postSchema;
