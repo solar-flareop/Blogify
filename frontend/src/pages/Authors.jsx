@@ -1,59 +1,51 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
-import Avatar1 from "/images/avatar1.jpg";
-import Avatar2 from "/images/avatar2.jpg";
-import Avatar3 from "/images/avatar3.jpg";
-import Avatar4 from "/images/avatar4.jpg";
-import Avatar5 from "/images/avatar5.jpg";
-import { useState } from "react";
-
-const authorsData = [
-  {
-    id: 1,
-    avatar: Avatar1,
-    name: "Sucheta",
-    posts: 3,
-  },
-  {
-    id: 2,
-    avatar: Avatar2,
-    name: "Suraj",
-    posts: 8,
-  },
-  {
-    id: 3,
-    avatar: Avatar3,
-    name: "Rahul",
-    posts: 10,
-  },
-  {
-    id: 4,
-    avatar: Avatar4,
-    name: "Riya",
-    posts: 6,
-  },
-  {
-    id: 5,
-    avatar: Avatar5,
-    name: "Pradnya",
-    posts: 4,
-  },
-];
+import Loader from "../components/Loader.jsx";
+const APP_ASSETS_URL = import.meta.env.VITE_APP_ASSETS_URL;
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const Authors = () => {
-  const [authors, setAuthors] = useState(authorsData);
+  const [authors, setAuthors] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const fetchAuthorProfiles = async () => {
+      try {
+        const { data } = await axios.get(`${SERVER_URL}/users`);
+        setAuthors(data);
+
+        setIsLoading(false);
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
+    };
+    fetchAuthorProfiles();
+  }, []);
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <section>
       <div className="authors">
         {authors.length > 0 ? (
           <div className="container authors__container">
-            {authors.map((author) => (
+            {authors?.map((author) => (
               <Link
-                to={`/posts/users/${author.id}`}
-                key={author.id}
+                to={`/posts/users/${author?._id}`}
+                key={author?._id}
                 className="author"
               >
                 <div className="author__avatar">
-                  <img src={author.avatar} alt={`${author.name}`} />
+                  <img
+                    src={`${APP_ASSETS_URL}/uploads/${author?.avatar}`}
+                    alt={`${author?.name}`}
+                  />
+                  <div className="avatarColor"></div>
                 </div>
                 <div className="author__info">
                   <h4>{author.name}</h4>

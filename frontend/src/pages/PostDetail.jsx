@@ -1,46 +1,69 @@
 import PostAuthor from "../components/PostAuthor";
-import { Link } from "react-router-dom";
-import Thumbnail from "/images/blog22.jpg";
+import { Link, useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import axios from "axios";
+import { UserContext } from "../context/userContext";
+import DeletePost from "./DeletePost";
+import Loader from "../components/Loader";
+const APP_ASSETS_URL = import.meta.env.VITE_APP_ASSETS_URL;
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const PostDetail = () => {
+  const [postData, setPostData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const { currentUser } = useContext(UserContext);
+  const { id } = useParams();
+
+  useEffect(() => {
+    const getPostDetail = async () => {
+      try {
+        setIsLoading(true);
+        const { data } = await axios.get(`${SERVER_URL}/posts/${id}`);
+        if (data) {
+          setIsLoading(false);
+          setPostData(data);
+        }
+      } catch (error) {
+        setError(error.response.data.message);
+      }
+    };
+    getPostDetail();
+  }, []);
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <section className="post-detail">
-      <div className="container post-detail__container">
-        <div className="post-detail__header">
-          <PostAuthor />
-          <div className="post-detail__buttons">
-            <Link to={`/posts/werwer/edit`} className="btn sm primary">
-              Edit
-            </Link>
-            <Link to={`/posts/werwer/delete`} className="btn sm danger">
-              Delete
-            </Link>
+      {error && <p className="error">{error}</p>}
+      {postData && (
+        <div className="container post-detail__container">
+          <div className="post-detail__header">
+            <PostAuthor
+              authorID={postData?.creator}
+              createdAt={postData?.createdAt}
+            />
+            {currentUser?.id === postData?.creator && (
+              <div className="post-detail__buttons">
+                <Link to={`/posts/${id}/edit`} className="btn sm primary">
+                  Edit
+                </Link>
+                <DeletePost postId={id} />
+              </div>
+            )}
           </div>
+          <h1>{postData?.title}</h1>
+          <div className="post-detail__thumbnail">
+            <img
+              src={`${APP_ASSETS_URL}/uploads/${postData?.thumbnail}`}
+              alt=""
+            />
+          </div>
+          <p dangerouslySetInnerHTML={{ __html: postData?.description }}></p>
         </div>
-        <h1>This is the post title!</h1>
-        <div className="post-detail__thumbnail">
-          <img src={Thumbnail} alt="" />
-        </div>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi nemo
-          commodi repellendus iste ipsa ipsum, dolor cum voluptatum recusandae.
-          Assumenda!
-        </p>
-        <p>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorem,
-          fuga, quae culpa aperiam excepturi, ad autem praesentium quisquam rem
-          quibusdam qui eius officiis placeat consequatur in sit neque cumque.
-          Mollitia in, obcaecati animi necessitatibus perspiciatis explicabo,
-          sit neque magni labore reprehenderit non nesciunt aperiam nobis iure
-          harum commodi soluta consequuntur cupiditate architecto nam sed quasi!
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe
-          corporis magni nisi sint accusamus nobis, vitae illo sit optio dolorem
-          debitis facilis libero culpa tempore autem accusantium, esse labore
-          sequi!
-        </p>
-      </div>
+      )}
     </section>
   );
 };

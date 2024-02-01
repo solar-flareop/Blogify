@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 
 const DeletePost = () => {
@@ -12,7 +12,7 @@ const DeletePost = () => {
       navigate("/");
     }
   }, []);
-  return <div>DeletePost</div>;
+  return <Link className="btn sm danger">Delete</Link>;
 };
 
 export default DeletePost;
