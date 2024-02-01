@@ -1,11 +1,17 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { UserContext } from "../context/userContext";
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const Login = () => {
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({
     email: "",
     password: "",
   });
+
   const handleInputController = (e) => {
     setUserData((prev) => {
       return {
@@ -14,13 +20,28 @@ const Login = () => {
       };
     });
   };
+
+  const { setCurrentUser } = useContext(UserContext);
+
+  const loginHandler = async (e) => {
+    try {
+      e.preventDefault();
+      const { data } = await axios.post(`${SERVER_URL}/users/login`, userData);
+      if (!data) {
+        toast.error("Login failed. Please try again... ");
+      }
+      setCurrentUser(data);
+      toast.success(`${data?.name} logged in  successfully`);
+      navigate("/");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
   return (
     <section className="login">
       <div className="container">
         <h2>Sign In</h2>
-        <form className="form login_form">
-          <p className="form__error-message">This is an error message</p>
-
+        <form className="form login_form" onSubmit={loginHandler}>
           <input
             type="email"
             placeholder="Email"

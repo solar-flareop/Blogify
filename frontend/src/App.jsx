@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Layout } from "./components";
+import { Toaster } from "react-hot-toast";
 import {
   Authors,
   AuthorsPost,
@@ -17,11 +18,16 @@ import {
   Signup,
 } from "./pages";
 import "./index.css";
+import UserProvider from "./context/userContext";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: (
+      <UserProvider>
+        <Layout />
+      </UserProvider>
+    ),
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Home /> },
@@ -44,6 +50,7 @@ const router = createBrowserRouter([
 const App = () => {
   return (
     <>
+      <Toaster position="top-center" />
       <RouterProvider router={router} />
     </>
   );

@@ -1,13 +1,18 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+
   const handleInputController = (e) => {
     setUserData((prev) => {
       return {
@@ -16,12 +21,26 @@ const Signup = () => {
       };
     });
   };
+
+  const signupHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await axios.post(
+        `${SERVER_URL}/users/register`,
+        userData
+      );
+      const successMessage = data.split(" ")[1];
+      toast.success(`${successMessage} registered successfully`);
+      navigate("/login");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
   return (
     <section className="register">
       <div className="container">
         <h2>Sign Up</h2>
-        <form className="form register_form">
-          <p className="form__error-message">This is an error message</p>
+        <form className="form register_form" onSubmit={signupHandler}>
           <input
             type="text"
             placeholder="Full Name"

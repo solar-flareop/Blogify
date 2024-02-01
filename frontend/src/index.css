@@ -645,3 +645,9 @@ textarea {
     width: 5rem;
   }
 }
+
+@media screen and (max-width: 1024px) {
+  .footer__categories {
+    flex-wrap: wrap;
+  }
+}

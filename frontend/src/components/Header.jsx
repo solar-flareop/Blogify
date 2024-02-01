@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import logo from "/logo.jpeg";
 import { FaBars } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { UserContext } from "../context/userContext";
 
 const Header = () => {
   const [isNavShow, setIsNavShow] = useState(
@@ -13,13 +14,15 @@ const Header = () => {
     window.innerWidth < 800 ? setIsNavShow(false) : setIsNavShow(true);
   };
 
+  const { currentUser } = useContext(UserContext);
+
   return (
     <nav>
       <div className="container nav__container">
         <Link to="/" className="nav__logo" onClick={closeNavHandle}>
           <img src={logo} alt="logo" />
         </Link>
-        {isNavShow && (
+        {currentUser?.id && isNavShow && (
           <ul className="nav__menu">
             <li>
               <Link to="/profile/sdf" onClick={closeNavHandle}>
@@ -43,6 +46,21 @@ const Header = () => {
             </li>
           </ul>
         )}
+        {!currentUser?.id && isNavShow && (
+          <ul className="nav__menu">
+            <li>
+              <Link to="/authors" onClick={closeNavHandle}>
+                Authors
+              </Link>
+            </li>
+            <li>
+              <Link to="/login" onClick={closeNavHandle}>
+                Login
+              </Link>
+            </li>
+          </ul>
+        )}
+
         <button
           className="nav__toggle-btn"
           onClick={() => setIsNavShow(!isNavShow)}

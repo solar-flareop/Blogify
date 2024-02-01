@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Avatar from "/images/avatar2.jpg";
 import { FaEdit, FaCheck } from "react-icons/fa";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../context/userContext";
 
 const Profile = () => {
   const [avatar, setAvatar] = useState(Avatar);
@@ -10,6 +11,16 @@ const Profile = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
+  //redirect for not logged in
+  const navigate = useNavigate();
+  const { currentUser } = useContext(UserContext);
+
+  useEffect(() => {
+    if (!currentUser?.token) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <section className="profile">
