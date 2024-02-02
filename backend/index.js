@@ -19,12 +19,19 @@ const FRONTEND_URL = process.env.FRONTEND_URL;
 connectDB(MONGO_URI);
 const __dirname = path.resolve();
 
+const corsOrigin = {
+  origin: FRONTEND_URL,
+  credentials: true,
+  optionSuccessStatus: 200,
+};
+
 //middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOrigin));
 app.use(urlencoded({ extended: true }));
 app.use(upload());
 app.use("/uploads", express.static(__dirname + "/uploads"));
+
 //API routes
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/posts", postRoute);

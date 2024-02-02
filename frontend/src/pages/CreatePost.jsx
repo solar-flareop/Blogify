@@ -3,6 +3,10 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { UserContext } from "../context/userContext";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import axios from "axios";
+
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
@@ -60,12 +64,33 @@ const CreatePost = () => {
     "Weather",
   ];
 
+  const createPost = async (e) => {
+    e.preventDefault();
+    const postData = new FormData();
+    postData.set("title", title);
+    postData.set("category", category);
+    postData.set("thumbnail", thumbnail);
+    postData.set("description", description);
+
+    try {
+      const response = await axios.post(`${SERVER_URL}/posts`, postData, {
+        withCredentials: true,
+        headers: { Authorization: `Bearer ${currentUser?.token}` },
+      });
+      if (response.status == 201) {
+        toast.success("Post created successfully");
+        return navigate("/");
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+
   return (
     <section className="create-post">
       <div className="container">
         <h2>Create Post</h2>
-        <p className=" form__error-message">This is an error message</p>
-        <form className="form create-post__form">
+        <form className="form create-post__form" onSubmit={createPost}>
           <input
             type="text"
             placeholder="Title"

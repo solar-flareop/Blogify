@@ -1,8 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../context/userContext";
+import toast from "react-hot-toast";
+import axios from "axios";
+
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const EditPost = () => {
   const [title, setTitle] = useState("");
@@ -60,12 +64,55 @@ const EditPost = () => {
     "Weather",
   ];
 
+  const { id } = useParams();
+
+  useEffect(() => {
+    const getPost = async () => {
+      try {
+        const { data } = await axios.get(`${SERVER_URL}/posts/${id}`);
+        if (data) {
+          setTitle(data.title);
+          setCategory(data.category);
+          setDescription(data.description);
+        }
+      } catch (error) {
+        toast.error(error.response.data.message);
+      }
+    };
+    getPost();
+  }, []);
+
+  const editPost = async (e) => {
+    e.preventDefault();
+    const postData = new FormData();
+    postData.set("title", title);
+    postData.set("category", category);
+    postData.set("thumbnail", thumbnail);
+    postData.set("description", description);
+
+    try {
+      const response = await axios.patch(
+        `${SERVER_URL}/posts/${id}`,
+        postData,
+        {
+          withCredentials: true,
+          headers: { Authorization: `Bearer ${currentUser?.token}` },
+        }
+      );
+      if (response.status == 200) {
+        toast.success("Post edited successfully");
+        return navigate("/");
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+
   return (
     <section className="create-post">
       <div className="container">
         <h2>Edit Post</h2>
-        <p className=" form__error-message">This is an error message</p>
-        <form className="form create-post__form">
+        <form className="form create-post__form" onSubmit={editPost}>
           <input
             type="text"
             placeholder="Title"

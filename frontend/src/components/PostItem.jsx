@@ -27,7 +27,7 @@ const PostItem = (props) => {
         <Link to={`/posts/${postID}`}>
           <h3>{shortTitle}</h3>
         </Link>
-        <p> {shortdescription} </p>
+        <p dangerouslySetInnerHTML={{ __html: shortdescription }} />
         <div className="post__footer">
           <PostAuthor authorID={authorID} createdAt={createdAt} />
           <Link to={`/posts/categories/${category}`} className="btn category">
