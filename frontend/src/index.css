@@ -261,6 +261,8 @@ footer {
   border-radius: var(--radius-3);
   overflow: hidden;
   height: 12rem;
+  display: grid;
+  place-items: center;
 }
 
 .post__content {
@@ -289,6 +291,9 @@ footer {
   aspect-ratio: 1/1;
   overflow: hidden;
   border-radius: var(--radius-2);
+  display: grid;
+  place-items: center;
+  border: 1px solid black;
 }
 
 /* my */
@@ -409,6 +414,8 @@ textarea {
   border-radius: var(--radius-3);
   border: 0.3rem solid var(--color-bg);
   overflow: hidden;
+  display: grid;
+  place-items: center;
 }
 
 .author__info p {
@@ -441,6 +448,8 @@ textarea {
   border-radius: 50%;
   border: 1rem solid var(--color-white);
   overflow: hidden;
+  display: grid;
+  place-items: center;
 }
 
 .avatar__form {

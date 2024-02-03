@@ -1,7 +1,6 @@
 import Post from "../models/postModel.js";
 import User from "../models/userModel.js";
 import HttpError from "../models/errorModel.js";
-import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";

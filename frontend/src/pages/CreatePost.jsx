@@ -10,7 +10,7 @@ const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("UnCatogrized");
+  const [category, setCategory] = useState("Uncategorized");
   const [description, setDescription] = useState("");
   const [thumbnail, setThumbnail] = useState("");
 
